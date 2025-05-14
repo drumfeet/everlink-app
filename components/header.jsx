@@ -76,7 +76,7 @@ export function Header() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[200px]">
-                    <Link href="/dashboard">
+                    <Link href={`/user/${address}`}>
                       <DropdownMenuItem className="cursor-pointer">
                         Dashboard
                       </DropdownMenuItem>
