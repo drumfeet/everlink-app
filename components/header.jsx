@@ -9,12 +9,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import { useState } from "react"
 import { useWallet } from "@/contexts/wallet-context"
+import { toast } from "sonner"
 
 export function Header() {
   const [open, setOpen] = useState(false)
   const { address, connecting, connectWanderWallet, connectOtherWallet, disconnect } = useWallet()
+
+  const copyAddress = () => {
+    if (address) {
+      navigator.clipboard.writeText(address)
+      toast("Address copied to clipboard")
+    }
+  }
 
   const handleWanderWallet = async () => {
     setOpen(false)
@@ -55,9 +69,26 @@ export function Header() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               {address ? (
-                <Button variant="outline" onClick={disconnect}>
-                  {address.slice(0, 4)}...{address.slice(-4)}
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      {address.slice(0, 4)}...{address.slice(-4)}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[200px]">
+                    <Link href="/dashboard">
+                      <DropdownMenuItem className="cursor-pointer">
+                        Dashboard
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem onClick={copyAddress} className="cursor-pointer">
+                      Copy Address
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={disconnect} className="cursor-pointer text-red-600 focus:text-red-600">
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <Button disabled={connecting}>
                   {connecting ? "Connecting..." : "Login"}
