@@ -10,9 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
+import { useState } from "react"
 
 export function Header() {
+  const [open, setOpen] = useState(false)
+
   const handleWanderWallet = async () => {
+    setOpen(false)
     await globalThis.arweaveWallet.connect([
       "ACCESS_ADDRESS",
       "SIGN_TRANSACTION",
@@ -25,6 +29,7 @@ export function Header() {
   }
 
   const handleOtherWallet = async () => {
+    setOpen(false)
     toast("Other Wallet coming soon")
   }
 
@@ -54,7 +59,7 @@ export function Header() {
               </svg>
             </Button>
           </Link>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>Login</Button>
             </DialogTrigger>
