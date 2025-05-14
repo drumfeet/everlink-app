@@ -2,7 +2,6 @@
 
 import { Button } from "./ui/button"
 import Link from "next/link"
-import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
@@ -11,26 +10,20 @@ import {
   DialogTrigger,
 } from "./ui/dialog"
 import { useState } from "react"
+import { useWallet } from "@/contexts/wallet-context"
 
 export function Header() {
   const [open, setOpen] = useState(false)
+  const { address, connecting, connectWanderWallet, connectOtherWallet, disconnect } = useWallet()
 
   const handleWanderWallet = async () => {
     setOpen(false)
-    await globalThis.arweaveWallet.connect([
-      "ACCESS_ADDRESS",
-      "SIGN_TRANSACTION",
-      "ACCESS_PUBLIC_KEY",
-      "SIGNATURE",
-    ])
-    const _userAddress = await globalThis.arweaveWallet.getActiveAddress()
-    console.log("_userAddress", _userAddress)
-    toast("Wander Wallet connected")
+    await connectWanderWallet()
   }
 
   const handleOtherWallet = async () => {
     setOpen(false)
-    toast("Other Wallet coming soon")
+    await connectOtherWallet()
   }
 
   return (
@@ -61,7 +54,15 @@ export function Header() {
           </Link>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button>Login</Button>
+              {address ? (
+                <Button variant="outline" onClick={disconnect}>
+                  {address.slice(0, 4)}...{address.slice(-4)}
+                </Button>
+              ) : (
+                <Button disabled={connecting}>
+                  {connecting ? "Connecting..." : "Login"}
+                </Button>
+              )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
