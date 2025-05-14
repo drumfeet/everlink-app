@@ -1,14 +1,31 @@
 "use client"
 
 import { Button } from "./ui/button"
-import { toast } from "sonner"
 import Link from "next/link"
+import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog"
 
 export function Header() {
-  const handleConnect = () => {
-    toast("Connect button clicked", {
-      description: "Connection feature coming soon!",
-    })
+  const handleWanderWallet = async () => {
+    await globalThis.arweaveWallet.connect([
+      "ACCESS_ADDRESS",
+      "SIGN_TRANSACTION",
+      "ACCESS_PUBLIC_KEY",
+      "SIGNATURE",
+    ])
+    const _userAddress = await globalThis.arweaveWallet.getActiveAddress()
+    console.log("_userAddress", _userAddress)
+    toast("Wander Wallet connected")
+  }
+
+  const handleOtherWallet = async () => {
+    toast("Other Wallet coming soon")
   }
 
   return (
@@ -37,7 +54,32 @@ export function Header() {
               </svg>
             </Button>
           </Link>
-          <Button onClick={handleConnect}>Connect</Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Login</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Connect</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col gap-3 mt-4">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  onClick={handleWanderWallet}
+                >
+                  Wander Wallet
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  onClick={handleOtherWallet}
+                >
+                  Other Wallet
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </header>
