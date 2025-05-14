@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 import { toast } from "sonner"
 
 const WalletContext = createContext({})
@@ -8,6 +8,46 @@ const WalletContext = createContext({})
 export function WalletProvider({ children }) {
   const [address, setAddress] = useState(null)
   const [connecting, setConnecting] = useState(false)
+
+  // Handle wallet switch events
+  useEffect(() => {
+    const handleWalletSwitch = async (e) => {
+      const { address: newAddress } = e.detail
+      if (newAddress) {
+        setAddress(newAddress)
+        toast("Wallet switched")
+      }
+    }
+
+    window.addEventListener("walletSwitch", handleWalletSwitch)
+    return () => window.removeEventListener("walletSwitch", handleWalletSwitch)
+  }, [])
+
+  // Check for existing wallet connection on mount
+  useEffect(() => {
+    const checkExistingConnection = async () => {
+      try {
+        // Check if arweave wallet exists and is already connected
+        if (globalThis.arweaveWallet) {
+          const permissions = await globalThis.arweaveWallet.getPermissions()
+          if (permissions.length > 0) {
+            setConnecting(true)
+            const connectedAddress = await globalThis.arweaveWallet.getActiveAddress()
+            if (connectedAddress) {
+              setAddress(connectedAddress)
+              toast("Wallet auto-connected")
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Auto-connect error:", error)
+      } finally {
+        setConnecting(false)
+      }
+    }
+
+    checkExistingConnection()
+  }, [])
 
   const connectWanderWallet = async () => {
     try {
