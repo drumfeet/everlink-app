@@ -6,14 +6,32 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 
 export default function Home() {
-  const [subdomain, setSubdomain] = useState("")
+  const [undername, setUndername] = useState("")
+  const [isValid, setIsValid] = useState(true)
+
+  const validateUndername = (value) => {
+    // Allow letters, numbers, and hyphens, but not at start/end
+    const pattern = /^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/
+    return value.length >= 3 && pattern.test(value)
+  }
+
+  const handleInputChange = (e) => {
+    const value = e.target.value
+    // Allow typing any character but validate for feedback
+    setUndername(value)
+    setIsValid(value === "" || validateUndername(value))
+  }
 
   const handleClaim = () => {
-    if (!subdomain.trim()) {
-      toast.error("Please enter a subdomain")
+    if (!undername.trim()) {
+      toast.error("Please enter a username")
       return
     }
-    toast.success(`Claiming https://everlink.fun/${subdomain} coming soon!`)
+    if (!validateUndername(undername)) {
+      toast.error("Username must be at least 3 characters and can only contain letters, numbers, and hyphens (not at start/end)")
+      return
+    }
+    toast.success(`Claiming https://everlink.fun/${undername} coming soon!`)
   }
 
   return (
@@ -27,9 +45,12 @@ export default function Home() {
           <Input
             type="text"
             placeholder="username"
-            value={subdomain}
-            onChange={(e) => setSubdomain(e.target.value)}
-            className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            value={undername}
+            onChange={handleInputChange}
+            className={`flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${!isValid ? 'text-destructive' : ''}`}
+            pattern="[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]"
+            minLength={3}
+            aria-invalid={!isValid}
           />
         </div>
       </div>
