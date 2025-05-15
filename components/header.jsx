@@ -32,7 +32,7 @@ export function Header() {
   const copyAddress = () => {
     if (address) {
       navigator.clipboard.writeText(address)
-      toast("Address copied to clipboard")
+      toast.success("Address copied to clipboard")
     }
   }
 

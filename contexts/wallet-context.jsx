@@ -15,7 +15,7 @@ export function WalletProvider({ children }) {
       const { address: newAddress } = e.detail
       if (newAddress) {
         setAddress(newAddress)
-        toast("Wallet switched")
+        toast.info("Wallet switched")
       }
     }
 
@@ -35,7 +35,7 @@ export function WalletProvider({ children }) {
             const connectedAddress = await globalThis.arweaveWallet.getActiveAddress()
             if (connectedAddress) {
               setAddress(connectedAddress)
-              toast("Wallet auto-connected")
+              toast.info("Wallet auto-connected")
             }
           }
         }
@@ -60,7 +60,7 @@ export function WalletProvider({ children }) {
       ])
       const userAddress = await globalThis.arweaveWallet.getActiveAddress()
       setAddress(userAddress)
-      toast("Wander Wallet connected")
+      toast.success("Wander Wallet connected")
     } catch (error) {
       console.error("Failed to connect Wander Wallet:", error)
       toast.error("Failed to connect Wander Wallet")
@@ -70,12 +70,12 @@ export function WalletProvider({ children }) {
   }
 
   const connectOtherWallet = async () => {
-    toast("Other Wallet coming soon")
+    toast.info("Other Wallet coming soon")
   }
 
   const disconnect = () => {
     setAddress(null)
-    toast("Wallet disconnected")
+    toast.info("Wallet disconnected")
   }
 
   return (
