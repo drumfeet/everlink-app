@@ -4,10 +4,29 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import { useWallet } from "@/contexts/wallet-context"
+
+const MAIN_PROCESS_ID = "wrxPk1k6Xo2O3k7LYl6hCw5D_-ORwKesImYNlbo5bAY"
+const TRANSACTION_ID_PLACEHOLDER = "oork_YifB3-JQQZg8EgMPQJytua_QCHKNmMqt5kmnCo"
 
 export default function Home() {
   const [undername, setUndername] = useState("")
   const [isValid, setIsValid] = useState(true)
+  const { address } = useWallet()
+
+  const getUndernameRecord = async () => {
+    try {
+      const { dryrun } = await import('@permaweb/aoconnect');
+      const undernameRecord = await dryrun({
+        process: MAIN_PROCESS_ID,
+        tags: [{ name: "Action", value: "GetUndernameRecord" }, { name: "Undername", value: undername }],
+      })
+      console.log("undernameRecord", undernameRecord)
+    } catch (error) {
+      console.error('Error getting undername record', error);
+      toast.error('Failed to get undername record');
+    }
+  }
 
   const validateUndername = (value) => {
     // Allow letters, numbers, and hyphens, but not at start/end
@@ -22,7 +41,7 @@ export default function Home() {
     setIsValid(value === "" || validateUndername(value))
   }
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (!undername.trim()) {
       toast.error("Please enter a username")
       return
@@ -31,7 +50,36 @@ export default function Home() {
       toast.error("Username must be at least 3 characters and can only contain letters, numbers, and hyphens (not at start/end)")
       return
     }
-    toast.success(`Claiming https://everlink.fun/${undername} coming soon!`)
+
+    if (!address) {
+      toast.error("Login to claim your username")
+      return
+    }
+
+    try {
+      const { message, createDataItemSigner, result } = await import('@permaweb/aoconnect')
+
+      const messageId = await message({
+        process: MAIN_PROCESS_ID,
+        tags: [
+          {
+            name: "Action",
+            value: "Set-Record",
+          }
+        ],
+        signer: createDataItemSigner(globalThis.arweaveWallet),
+      })
+      console.log("messageId", messageId)
+
+      const _result = await result({
+        message: messageId,
+        process: MAIN_PROCESS_ID,
+      })
+      console.log("_result", _result)
+    } catch (error) {
+      console.error('Error setting undername record', error);
+      toast.error('Failed to set undername record');
+    }
   }
 
   return (

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ar.io/sdk": "^3.10.2",
+    "@permaweb/aoconnect": "^0.0.84",
     "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-dropdown-menu": "^2.1.14",
     "@radix-ui/react-slot": "^1.2.2",
