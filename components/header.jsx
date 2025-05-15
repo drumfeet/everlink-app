@@ -59,7 +59,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" className="flex items-center gap-2" asChild>
+          <Button variant="outline" className="flex items-center gap-2" asChild>
             <Link href="/explore">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,7 @@ export function Header() {
               {address ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="min-w-[120px]">
+                    <Button variant="default" className="min-w-[120px]">
                       {address.slice(0, 4)}...{address.slice(-4)}
                     </Button>
                   </DropdownMenuTrigger>
@@ -112,7 +112,7 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button className="min-w-[120px]" disabled={connecting}>
+                <Button variant="default" className="min-w-[120px]" disabled={connecting}>
                   {connecting ? "Connecting..." : "Login"}
                 </Button>
               )}
