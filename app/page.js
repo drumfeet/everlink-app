@@ -16,6 +16,12 @@ export default function Home() {
   const { address } = useWallet()
 
   const getUndernameRecord = async () => {
+    const validation = validateUsernameInput(undername)
+    if (!validation.valid) {
+      toast.error(validation.message)
+      return
+    }
+
     try {
       const { dryrun } = await import('@permaweb/aoconnect');
       const undernameRecord = await dryrun({
@@ -35,6 +41,18 @@ export default function Home() {
     return value.length >= 3 && pattern.test(value)
   }
 
+  const validateUsernameInput = (username) => {
+    if (!username.trim()) {
+      return { valid: false, message: "Please enter a username" }
+    }
+
+    if (!validateUndername(username)) {
+      return { valid: false, message: "Username must be at least 3 characters and can only contain letters, numbers, and hyphens (not at start/end)" }
+    }
+
+    return { valid: true }
+  }
+
   const handleInputChange = (e) => {
     const value = e.target.value
     // Allow typing any character but validate for feedback
@@ -43,12 +61,9 @@ export default function Home() {
   }
 
   const handleClaim = async () => {
-    if (!undername.trim()) {
-      toast.error("Please enter a username")
-      return
-    }
-    if (!validateUndername(undername)) {
-      toast.error("Username must be at least 3 characters and can only contain letters, numbers, and hyphens (not at start/end)")
+    const validation = validateUsernameInput(undername)
+    if (!validation.valid) {
+      toast.error(validation.message)
       return
     }
 
