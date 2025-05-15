@@ -87,7 +87,7 @@ export function Header() {
               {address ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
+                    <Button className="min-w-[120px]">
                       {address.slice(0, 4)}...{address.slice(-4)}
                     </Button>
                   </DropdownMenuTrigger>
@@ -112,7 +112,7 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button disabled={connecting}>
+                <Button className="min-w-[120px]" disabled={connecting}>
                   {connecting ? "Connecting..." : "Login"}
                 </Button>
               )}
