@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { useWallet } from "@/contexts/wallet-context"
+import { CheckIcon } from "lucide-react"
 
 const MAIN_PROCESS_ID = "wrxPk1k6Xo2O3k7LYl6hCw5D_-ORwKesImYNlbo5bAY"
 const TRANSACTION_ID_PLACEHOLDER = "oork_YifB3-JQQZg8EgMPQJytua_QCHKNmMqt5kmnCo"
@@ -85,11 +86,10 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] max-w-md mx-auto text-center">
       <p className="text-gray-500 mb-8">
-        This will be your unique identifier on Everlink.
+        Your profile URL will be <span className="font-bold">everlink.fun/{undername || 'username'}</span>
       </p>
       <div className="w-full max-w-sm">
         <div className="flex w-full items-center rounded-md border bg-background ring-offset-background">
-          <span className="pl-3 text-sm text-muted-foreground select-none">https://everlink.fun/</span>
           <Input
             type="text"
             placeholder="username"
@@ -100,6 +100,14 @@ export default function Home() {
             minLength={3}
             aria-invalid={!isValid}
           />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={getUndernameRecord}
+            className="ml-2"
+          >
+            <CheckIcon className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <Button
