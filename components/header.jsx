@@ -21,7 +21,13 @@ import { toast } from "sonner"
 
 export function Header() {
   const [open, setOpen] = useState(false)
-  const { address, connecting, connectWanderWallet, connectOtherWallet, disconnect } = useWallet()
+  const {
+    address,
+    connecting,
+    connectWanderWallet,
+    connectOtherWallet,
+    disconnect,
+  } = useWallet()
 
   const copyAddress = () => {
     if (address) {
@@ -41,12 +47,20 @@ export function Header() {
   }
 
   return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-semibold hover:text-gray-700 transition-colors">everlink.fun</Link>
-        <div className="flex items-center gap-2">
-          <Link href="/explore">
-            <Button variant="ghost" size="icon" className="w-9 h-9">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-6">
+        <div className="flex items-center gap-6">
+          <Link
+            href="/"
+            className="text-xl font-semibold hover:text-gray-700 transition-colors"
+          >
+            everlink.fun
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" className="flex items-center gap-2" asChild>
+            <Link href="/explore">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -64,8 +78,10 @@ export function Header() {
                 <path d="M3 5h4" />
                 <path d="M17 19h4" />
               </svg>
-            </Button>
-          </Link>
+              <span className="hidden md:inline">Explore</span>
+            </Link>
+          </Button>
+
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               {address ? (
@@ -81,10 +97,16 @@ export function Header() {
                         Dashboard
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem onClick={copyAddress} className="cursor-pointer">
+                    <DropdownMenuItem
+                      onClick={copyAddress}
+                      className="cursor-pointer"
+                    >
                       Copy Address
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={disconnect} className="cursor-pointer text-red-600 focus:text-red-600">
+                    <DropdownMenuItem
+                      onClick={disconnect}
+                      className="cursor-pointer text-red-600 focus:text-red-600"
+                    >
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
