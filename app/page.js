@@ -13,6 +13,7 @@ const TRANSACTION_ID_PLACEHOLDER = "oork_YifB3-JQQZg8EgMPQJytua_QCHKNmMqt5kmnCo"
 export default function Home() {
   const [undername, setUndername] = useState("")
   const [isValid, setIsValid] = useState(true)
+  const [recordStatus, setRecordStatus] = useState(null) // null: not checked, true: exists, false: available
   const { address } = useWallet()
 
   const getUndernameRecord = async () => {
@@ -29,6 +30,15 @@ export default function Home() {
         tags: [{ name: "Action", value: "GetUndernameRecord" }, { name: "Undername", value: undername }],
       })
       console.log("undernameRecord", undernameRecord)
+      const record = JSON.parse(undernameRecord.Messages[0].Data)
+      console.log("record", record)
+      setRecordStatus(record !== null && Object.keys(record).length > 0)
+
+      if (record && Object.keys(record).length > 0) {
+        toast.error('This username is already taken')
+      } else {
+        toast.success('This username is available')
+      }
     } catch (error) {
       console.error('Error getting undername record', error);
       toast.error('Failed to get undername record');
@@ -100,9 +110,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] max-w-md mx-auto text-center">
-      <p className="text-gray-500 mb-8">
-        Your profile URL will be <span className="font-bold">everlink.fun/{undername || 'username'}</span>
-      </p>
+      <h1 className="text-3xl font-bold mb-4">
+        Create your Everlink
+      </h1>
       <div className="w-full max-w-sm">
         <div className="flex w-full items-center rounded-md border bg-background ring-offset-background">
           <Input
@@ -124,6 +134,11 @@ export default function Home() {
             <CheckIcon className="h-4 w-4" />
           </Button>
         </div>
+        {recordStatus !== null && (
+          <p className={`mt-2 text-sm ${recordStatus ? 'text-destructive' : 'text-green-600'}`}>
+            {recordStatus ? 'This username is already taken' : 'This username is available'}
+          </p>
+        )}
       </div>
       <Button
         className="mt-4 w-full max-w-sm"
