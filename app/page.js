@@ -65,6 +65,10 @@ export default function Home() {
 
   const handleInputChange = (e) => {
     const value = e.target.value
+    // Reset record status when input changes
+    if (recordStatus !== null) {
+      setRecordStatus(null)
+    }
     // Allow typing any character but validate for feedback
     setUndername(value)
     setIsValid(value === "" || validateUndername(value))
@@ -136,7 +140,21 @@ export default function Home() {
         </div>
         {recordStatus !== null && (
           <p className={`mt-2 text-sm ${recordStatus ? 'text-destructive' : 'text-green-600'}`}>
-            {recordStatus ? 'This username is already taken' : 'This username is available'}
+            {recordStatus ? (
+              'This username is already taken'
+            ) : (
+              <>
+                This username is available <br />
+                <a
+                  href={`https://everlink.fun/${undername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:underline"
+                >
+                  everlink.fun/{undername}
+                </a>
+              </>
+            )}
           </p>
         )}
       </div>
