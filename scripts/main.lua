@@ -13,14 +13,32 @@ Records = Records or {
     }
 }
 
-local sendErrorMessage = function(msg, err, target)
-    if not target then
-        Send({ Target = msg.From, Error = "true", Data = err })
-        print("Error", "From" .. " " .. msg.From .. " " .. err)
-    else
-        Send({ Target = target, Error = "true", Data = err })
-        print("Error", "Target" .. " " .. target .. " " .. err)
+local sendErrorMessage = function(msg, errorStr, target)
+    -- Input validation
+    if type(msg) ~= "table" then
+        error("msg must be a table", 2)
     end
+
+    if type(errorStr) ~= "string" then
+        error("errorStr must be a string", 2)
+    end
+
+    -- Prepare error data
+    local errorData = json.encode({ Error = true, ErrorStr = errorStr })
+
+    -- Determine target and log message
+    local sendTarget = target or msg.From
+    local logPrefix = target and "Target" or "From"
+
+    -- Send error
+    Send({
+        Target = sendTarget,
+        Error = true,
+        Data = errorData
+    })
+
+    -- Log the error
+    print(string.format("Error: %s %s - %s", logPrefix, sendTarget, errorStr))
 end
 
 Handlers.add("GetUndernameRecord", function(msg)
