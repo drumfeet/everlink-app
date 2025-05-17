@@ -139,23 +139,27 @@ export default function Home() {
           </Button>
         </div>
         {recordStatus !== null && (
-          <p className={`mt-2 text-sm ${recordStatus ? 'text-destructive' : 'text-green-600'}`}>
+          <div className="mt-2 text-sm">
             {recordStatus ? (
-              'This username is already taken'
+              <p className="text-destructive">This username is already taken</p>
             ) : (
-              <>
-                This username is available <br />
+              <div className="space-y-1">
+                <p className="text-green-600">This username is available</p>
                 <a
                   href={`https://everlink.fun/${undername}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600 hover:underline"
+                  className="inline-block max-w-full hover:underline break-all"
+                  style={{
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                  }}
                 >
                   everlink.fun/{undername}
                 </a>
-              </>
+              </div>
             )}
-          </p>
+          </div>
         )}
       </div>
       <Button
